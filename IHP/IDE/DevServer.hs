@@ -33,9 +33,12 @@ main = do
     let ?context = Context { actionVar, portConfig, appStateRef, isDebugMode }
 
     threadId <- myThreadId
+
+    let handleStopException = \(e :: SomeException) -> do putStrLn ("stop failed: " <> tshow e)
+
     let catchHandler = do
             state <- readIORef appStateRef
-            stop state
+            (stop state) `catch` handleStopException
             throwTo threadId ExitSuccess
     installHandler sigINT (Catch catchHandler) Nothing
 
@@ -162,12 +165,19 @@ start = do
 stop :: (?context :: Context) => AppState -> IO ()
 stop AppState { .. } = do
     when (get #isDebugMode ?context) (putStrLn "Stop called")
+    putStrLn "stop: A"
     stopAppGHCI appGHCIState
+    putStrLn "stop: B"
     stopPostgres postgresState
+    putStrLn "stop: C"
     stopStatusServer statusServerState
+    putStrLn "stop: D"
     stopLiveReloadNotification liveReloadNotificationServerState
+    putStrLn "stop: E"
     stopFileWatcher fileWatcherState
+    putStrLn "stop: F"
     stopToolServer toolServerState
+    putStrLn "stop: G"
 
 startFilewatcher :: (?context :: Context) => IO ()
 startFilewatcher = do
