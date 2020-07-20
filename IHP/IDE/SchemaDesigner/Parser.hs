@@ -185,6 +185,10 @@ sqlType = choice
                     try (symbol' "INTEGER") <|> try (symbol' "INT4") <|> try (symbol' "INT")
                     pure PInt
 
+                point = do
+                    try (symbol' "POINT")
+                    pure PPoint
+
                 bigint = do
                     try (symbol' "BIGINT") <|> try (symbol' "INT8")
                     pure PBigInt

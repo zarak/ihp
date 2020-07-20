@@ -66,6 +66,7 @@ haskellType table column@(Column { columnType, notNull }) =
                 PDate -> "Data.Time.Calendar.Day"
                 PBinary -> "Binary"
                 PTime -> "TimeOfDay"
+                PPoint -> "Coordinate"
                 PCustomType theType -> tableNameToModelName theType
                 PTimestamp -> "LocalTime"
                 (PNumeric _ _) -> "Float"
